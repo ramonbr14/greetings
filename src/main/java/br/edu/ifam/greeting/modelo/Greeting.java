@@ -1,4 +1,4 @@
-package br.edu.ifam.greetings.model;
+package br.edu.ifam.greeting.modelo;
 
 public class Greeting {
 	private long id;

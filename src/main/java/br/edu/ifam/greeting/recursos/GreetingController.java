@@ -1,28 +1,63 @@
-package br.edu.ifam.greetings.recursos;
+package br.edu.ifam.greeting.recursos;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifam.greetings.model.Greeting;
+import br.edu.ifam.greeting.modelo.Greeting;
+import br.edu.ifam.greeting.servico.GreetingService;
 
-@RestController
+@RestController 
 @RequestMapping(value="greeting")
-public class GreetingsController {
+public class GreetingController {
    
-	private Greeting greeting;
+	//private Greeting greeting; -> linha não é necessaria 1:54
+	@Autowired
+	GreetingService greetingService;
 	
+	@GetMapping
+	public ResponseEntity<List<Greeting>> getGreeting(){
+		return ResponseEntity.ok(greetingService.obterGreetings());
+	}
+	@PostMapping
+	public ResponseEntity<Greeting> postGreeting(@RequestBody Greeting greeting){
+		Greeting g = greetingService.criarGreeting(greeting);
+		return ResponseEntity.status(HttpStatus.CREATED).body(g);
+	}
+	
+	@PutMapping
+	@RequestMapping(value="/{id}")
+	public ResponseEntity<Greeting> putGreeting(@RequestBody Greeting greeting,
+			@PathVariable("id") int id){
+		return ResponseEntity.ok(greetingService.atualizarGreeting(id, greeting));
+	}
+	
+	@DeleteMapping(value="/{id}")
+	public ResponseEntity<Void> deleteGreeting(@PathVariable("id") int id){
+		greetingService.excluirGreeting(id);
+		return ResponseEntity.noContent().build();
+	}
+	     
+	
+	
+	/* Codigo ate 1:57 da aula 4
 	@GetMapping
 	public ResponseEntity<Greeting> getGreeting(){
 		if(greeting == null)
 			return ResponseEntity.notFound().build();
 		return ResponseEntity.ok(this.greeting);
 	}
-	
+	@PostMapping
 	public ResponseEntity<Greeting> postGreeting(@RequestBody Greeting greeting){
 		this.greeting =  greeting;
 		return ResponseEntity.status(HttpStatus.CREATED).body(this.greeting);
@@ -45,11 +80,9 @@ public class GreetingsController {
 		this.greeting =  greeting;
 		return ResponseEntity.status(HttpStatus.CREATED).body(this.greeting);
 	} 
-	 */
-	
-	
-	
-	/*Resposta OK
+	 
+		
+	Resposta OK
 	public ResponseEntity<Greeting> getGreeting(@RequestParam(value="name",
 			defaultValue = "Aluno do IFAM!") String name){
 		Greeting greeting =  new Greeting(0,"Hello, "+ name);

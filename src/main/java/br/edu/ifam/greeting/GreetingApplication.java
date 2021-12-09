@@ -1,13 +1,13 @@
-package br.edu.ifam.greetings;
+package br.edu.ifam.greeting;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GreetingsApplication {
+public class GreetingApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(GreetingsApplication.class, args);
+		SpringApplication.run(GreetingApplication.class, args);
 	}
 
 }
