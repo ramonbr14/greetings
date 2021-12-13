@@ -25,7 +25,7 @@ public class GreetingService {
 		
 	}
 	public Greeting atualizarGreeting(int id, Greeting greeting) {
-		greeting.set(id);
+		greeting.setId(id);
 		greetings.set(id, greeting);
 		return greetings.get(id);
 	}
