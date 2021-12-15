@@ -1,6 +1,7 @@
 package br.edu.ifam.greeting.recursos;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,19 @@ public class GreetingController {
 	@GetMapping
 	public ResponseEntity<List<Greeting>> getGreeting(){
 		return ResponseEntity.ok(greetingService.obterGreetings());
+	}
+	
+	@GetMapping("/busca")
+	public ResponseEntity<List<Greeting>> getGreetingByContent(String content){
+		return ResponseEntity.ok(greetingService.obterGreetings());
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Greeting> getGreeting(@PathVariable("id") long id){
+		Optional<Greeting> optionalGreeting = greetingService.obterGreetings(id);
+		if(optionalGreeting.isPresent())
+			return ResponseEntity.ok(optionalGreeting.get());
+		return ResponseEntity.notFound().build();
 	}
 	@PostMapping
 	public ResponseEntity<Greeting> postGreeting(@RequestBody Greeting greeting){

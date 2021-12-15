@@ -2,35 +2,44 @@ package br.edu.ifam.greeting.servico;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.edu.ifam.greeting.modelo.Greeting;
+import br.edu.ifam.greeting.repository.GreetingRepository;
 
 @Service
 public class GreetingService {
 	List<Greeting> greetings = new ArrayList<Greeting>();
 	
-	public Greeting obterGreetings(int indice) {
-		return greetings.get(indice);
+	@Autowired
+	GreetingRepository greetingRepository;
+	
+	public Optional<Greeting> obterGreetings(long id) {
+		return greetingRepository.findById(id);
 	}
 	
 	public List<Greeting> obterGreetings() {
-		return greetings;
+		return greetingRepository.findAll();
 	}
 	
+	public List<Greeting> obterGreetings(String content) {
+		return greetingRepository.findByContent(content);
+	}
+	
+	
+	
 	public Greeting criarGreeting(Greeting greeting) {
-		greetings.add(greeting);
-		int i = greetings.size()-1;
-		greetings.get(i).setId(i);
-		return greetings.get(i);
+		return greetingRepository.save(greeting);
 		
 	}
-	public Greeting atualizarGreeting(int id, Greeting greeting) {
+	public Greeting atualizarGreeting(long id, Greeting greeting) {
 		greeting.setId(id);
-		greetings.set(id, greeting);
-		return greetings.get(id);
+		return greetingRepository.save(greeting);
 	}
 
-	public void excluirGreeting(int id) {
-		greetings.remove(id);
+	public void excluirGreeting(long id) {
+		greetingRepository.deleteById(id);
 	}
 }
