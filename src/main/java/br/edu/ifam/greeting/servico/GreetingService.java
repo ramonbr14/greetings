@@ -6,7 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import br.edu.ifam.greeting.modelo.Greeting;
+
+import br.edu.ifam.greeting.entidade.Greeting;
 import br.edu.ifam.greeting.repository.GreetingRepository;
 
 @Service

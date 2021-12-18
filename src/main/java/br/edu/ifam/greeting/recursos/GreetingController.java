@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,9 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ifam.greeting.modelo.Greeting;
+import br.edu.ifam.greeting.assembler.GreetingModelAssembler;
+import br.edu.ifam.greeting.entidade.Greeting;
+import br.edu.ifam.greeting.modelo.GreetingModel;
 import br.edu.ifam.greeting.servico.GreetingService;
 
 @RestController 
@@ -26,21 +30,34 @@ public class GreetingController {
 	@Autowired
 	GreetingService greetingService;
 	
+	@Autowired
+	GreetingModelAssembler greetingModelAssembler; 
+	
 	@GetMapping
-	public ResponseEntity<List<Greeting>> getGreeting(){
-		return ResponseEntity.ok(greetingService.obterGreetings());
+	public ResponseEntity<CollectionModel<GreetingModel>> getGreetings() {
+		List<Greeting> greetings = greetingService.obterGreetings();
+		CollectionModel<GreetingModel> greetingsModel =
+				greetingModelAssembler.toCollectionModel(greetings);
+		return ResponseEntity.ok(greetingsModel); // 200 OK
 	}
 	
 	@GetMapping("/busca")
-	public ResponseEntity<List<Greeting>> getGreetingByContent(String content){
-		return ResponseEntity.ok(greetingService.obterGreetings());
+	public ResponseEntity<CollectionModel<GreetingModel>> getGreetingsByContent(@RequestParam String content) {
+		List<Greeting> greetings = greetingService.obterGreetings(content);
+		CollectionModel<GreetingModel> greetingsModel =
+				greetingModelAssembler.toCollectionModel(greetings);
+		return ResponseEntity.ok(greetingsModel); // 200 OK
 	}
 	
+	
 	@GetMapping("/{id}")
-	public ResponseEntity<Greeting> getGreeting(@PathVariable("id") long id){
+	public ResponseEntity<GreetingModel> getGreeting(@PathVariable("id") long id){
 		Optional<Greeting> optionalGreeting = greetingService.obterGreetings(id);
-		if(optionalGreeting.isPresent())
-			return ResponseEntity.ok(optionalGreeting.get());
+		if(optionalGreeting.isPresent()) {
+			Greeting greeting = optionalGreeting.get();
+			GreetingModel greetingModel = greetingModelAssembler.toModel(greeting);
+			return ResponseEntity.ok(greetingModel);
+		}
 		return ResponseEntity.notFound().build();
 	}
 	@PostMapping

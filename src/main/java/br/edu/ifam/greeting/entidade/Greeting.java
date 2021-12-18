@@ -1,4 +1,4 @@
-package br.edu.ifam.greeting.modelo;
+package br.edu.ifam.greeting.entidade;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
